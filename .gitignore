@@ -23,3 +23,8 @@ informe/main.pdf
 .vscode/
 .idea/
 .DS_Store
+
+# Datos generados por scripts/01_preparar_datos.py (se regeneran con `make datos`)
+datos/procesados/*
+!datos/procesados/.gitkeep
+*.egg-info/

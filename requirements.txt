@@ -5,3 +5,4 @@ matplotlib
 pyyaml
 pytest
 nbstripout
+-e .
