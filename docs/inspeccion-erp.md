@@ -7,7 +7,12 @@ Fecha: 2026-11-08.
 
 Los pedidos online del ERP La Linda están en las tablas `web_orders` y `web_order_items` de `database/database.sqlite`.
 Los genera `database/seeders/Sales/SalesHistorySeeder.php` con semilla fija `20260416`, pasando por las mismas Actions que producción.
-El histórico se congeló en `datos/raw/erp_web_orders.csv` (sin datos de clientes) con `python scripts/01_preparar_datos.py --desde-erp`.
+El histórico se congeló en `datos/raw/erp_web_orders.csv` (sin datos de clientes) y se versiona, así que el pipeline no necesita la base del ERP.
+Solo para volver a congelarlo hace falta la base, cuya ruta se pasa por argumento (no está en `config/`):
+
+```bash
+python scripts/01_preparar_datos.py --desde-erp RUTA/la-linda-app/database/database.sqlite
+```
 
 ## Qué tiene
 
@@ -65,7 +70,7 @@ Es la escala de un supermercado regional con venta online consolidada; cambiar `
 
 ## Salidas de `make datos`
 
-- `datos/raw/erp_web_orders.csv`: histórico del ERP congelado (versionado).
+- `datos/raw/erp_web_orders.csv`: histórico del ERP congelado (versionado; `make datos` lo lee, no lo regenera).
 - `datos/procesados/pedidos.csv`: pedidos sintéticos (`pedido_id`, `llegada`, `lineas`, `metodo_entrega`).
 - `datos/procesados/serie_horaria.csv`: pedidos por hora de apertura, con ceros (entrada del pronóstico).
 - `datos/procesados/tasa_esperada.csv`: λ(d, h) verdadera, útil para validar pronóstico y simulación.
