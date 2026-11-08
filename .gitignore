@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Auxiliares de LaTeX
+informe/*.aux
+informe/*.bbl
+informe/*.bcf
+informe/*.blg
+informe/*.fdb_latexmk
+informe/*.fls
+informe/*.log
+informe/*.out
+informe/*.run.xml
+informe/*.toc
+informe/*.synctex.gz
+informe/main.pdf
+
+# Editores y SO
+.vscode/
+.idea/
+.DS_Store

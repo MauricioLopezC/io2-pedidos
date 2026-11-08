@@ -1,0 +1,7 @@
+pandas
+numpy
+simpy
+matplotlib
+pyyaml
+pytest
+nbstripout
