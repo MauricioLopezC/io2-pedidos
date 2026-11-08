@@ -1,3 +1,13 @@
 \section{Objetivos}
+
 \subsection{Objetivo general}
+Desarrollar y evaluar un modelo de apoyo a la decisión que combine el pronóstico de pedidos con el análisis de colas y la simulación de eventos discretos para recomendar una dotación de preparadores bajo distintos escenarios de demanda.
+
 \subsection{Objetivos específicos}
+\begin{itemize}
+\item Procesar el registro histórico sintético del ERP para identificar los pedidos online y construir la serie temporal de arribos por hora.
+\item Estimar la demanda horaria de pedidos mediante métodos de referencia estacional y promedios recientes, evaluando su desempeño con el error absoluto medio (MAE) sobre un período de prueba reservado.
+\item Formular el modelo de colas del proceso de preparación de pedidos bajo una fila común con múltiples servidores equivalentes y utilizar el sistema $M/M/c$ de tasas constantes como referencia analítica de verificación.
+\item Implementar un simulador de eventos discretos que incorpore el perfil horario de demanda y el arrastre de pedidos pendientes entre horas para evaluar dotaciones alternativas en escenarios de demanda baja, media y alta.
+\item Recomendar la menor dotación de preparadores que cumpla el objetivo de tiempo de preparación en cada escenario, analizando la sensibilidad de la decisión frente a errores de pronóstico y variaciones en los tiempos de servicio.
+\end{itemize}

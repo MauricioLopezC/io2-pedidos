@@ -1,6 +1,6 @@
 # Propuesta inicial
 
-**Estado:** borrador para conversar con el compañero y decidir juntos si eligen este tema. La conformidad del compañero todavía está pendiente. El detalle sigue la estructura de la sección 12 de la [consigna](../01-fuentes/consignas/Trabajo_Final_Consigna.pdf); una eventual presentación a la cátedra sería un paso posterior.
+**Estado:** propuesta acordada por el equipo. El detalle sigue la estructura de la sección 12 de la [consigna](../01-fuentes/consignas/Trabajo_Final_Consigna.pdf); una eventual presentación a la cátedra sería el siguiente paso.
 
 ## Título provisorio
 
@@ -30,7 +30,9 @@ Este resumen describe lo que proponemos hacer. Las cantidades de empleados son e
 
 ## Integrantes
 
-Dos estudiantes. Nombres y apellidos pendientes de completar.
+- Flores, Facundo Néstor — 44661192
+- Lopez, Mauricio Agustín — 43337336
+- Sgabussi Donaire, Pablo Bernardo — 45599342
 
 ## Modalidad y unidades involucradas
 
@@ -97,7 +99,7 @@ Las referencias iniciales se ampliarán con bibliografía académica de teoría 
 
 ## Revisión del equipo
 
-Pendiente de conversar con el compañero y acordar el tema y su alcance. Este documento es el material para esa conversación.
+Propuesta revisada y acordada por los integrantes del equipo en cuanto al tema, enfoque metodológico y alcance inicial.
 
 ## Aprobación de la cátedra
 

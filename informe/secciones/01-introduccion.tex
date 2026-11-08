@@ -1,5 +1,25 @@
 \section{Introducción}
+
 \subsection{Contexto}
+Durante el cursado de la asignatura Sistemas III, el equipo desarrolló un sistema de planificación de recursos empresariales (ERP) orientado a la gestión integral de un supermercado.
+Dicho sistema abarca módulos de ventas presenciales, cajas, inventario, depósitos y transferencias, compras, proveedores, comercio electrónico y un tablero gerencial con datos históricos sintéticos.
+En la modalidad de comercio electrónico, cada compra realizada por un cliente genera un pedido online que debe ser armado dentro del establecimiento antes de quedar disponible para su retiro o despacho.
+Este trabajo toma ese entorno operativo como caso de estudio para analizar la etapa de preparación de pedidos online desde la perspectiva de la Investigación Operativa.
+
 \subsection{Problema}
+La llegada de pedidos online a lo largo del día presenta variaciones horarias que dificultan dimensionar de manera intuitiva la cantidad de personal necesaria en el sector de preparación.
+Cuando la tasa de arribo de pedidos supera la capacidad de atención de los empleados disponibles, se acumulan órdenes pendientes en espera y se incrementa el tiempo total hasta que cada pedido queda listo.
+Por el contrario, asignar una dotación excesiva reduce las demoras operativas, pero genera capacidad ociosa durante las franjas de menor actividad e incrementa los costos laborales.
+Ante este compromiso entre nivel de servicio y utilización de recursos, el problema central consiste en determinar cuántos preparadores conviene asignar para atender distintos niveles de demanda y cumplir un objetivo de tiempo de preparación definido.
+
 \subsection{Sistema analizado}
+El sistema bajo estudio comprende el recorrido operativo de cada pedido online desde su ingreso hasta su finalización en el sector de armado.
+El flujo considerado sigue cuatro etapas consecutivas: la llegada del pedido al sistema, la espera en una fila común si todo el personal se encuentra ocupado, la preparación por parte de un empleado disponible y la disponibilidad final del pedido preparado.
+Los pedidos se atienden bajo una disciplina de orden de llegada y cada preparador procesa un único pedido a la vez.
+El alcance del modelo se circunscribe hasta el instante en que el pedido queda listo, asumiendo disponibilidad de productos en inventario y empleados con desempeño equivalente, por lo que el ruteo interno en el depósito, la gestión de faltantes y el reparto domiciliario quedan fuera del límite de este estudio inicial.
+
 \subsection{Justificación de las técnicas}
+Abordar la planificación de personal en este proceso requiere articular tres herramientas complementarias de la Investigación Operativa: pronósticos de demanda, teoría de colas y simulación de eventos discretos.
+En primer lugar, los métodos de pronóstico permiten estimar el perfil horario de arribo de pedidos para la jornada siguiente a partir del registro histórico y cuantificar el error de predicción sobre un conjunto de prueba reservado \cite{hyndman_athanasopoulos_fpp3}.
+En segundo lugar, la teoría de colas proporciona el marco formal para relacionar la tasa de llegadas, la capacidad de servicio y los tiempos de espera, ofreciendo además el modelo analítico $M/M/c$ como referencia exacta bajo condiciones de régimen estacionario.
+Finalmente, la simulación de eventos discretos mediante recursos compartidos de capacidad limitada permite representar perfiles horarios de demanda variable, conservar los pedidos pendientes entre horas sucesivas y comparar el desempeño de distintas dotaciones en escenarios de demanda baja, media y alta \cite{simpy_shared_resources}.
