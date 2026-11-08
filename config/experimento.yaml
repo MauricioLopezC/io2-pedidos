@@ -1,0 +1,38 @@
+# Parámetros del estudio. Cada sección tiene un responsable (ver README).
+
+# --- Datos (Persona A) -------------------------------------------------------
+datos:
+  # Base del ERP La Linda, leída en modo solo lectura para congelar su histórico.
+  # Solo hace falta para regenerar datos/raw/erp_web_orders.csv; el resto del
+  # pipeline usa el CSV versionado.
+  erp_sqlite: ~/Workspace/LaLinda/la-linda-app/database/database.sqlite
+  erp_csv: datos/raw/erp_web_orders.csv
+
+  # Horario de atención del sector de preparación: [apertura, cierre).
+  hora_apertura: 8
+  hora_cierre: 21
+
+  # Histórico sintético propio, inspirado en el ERP pero escalado a un
+  # supermercado online con volumen suficiente para que la dotación importe.
+  generador:
+    semilla: 20260416          # la misma semilla que usa el seeder del ERP
+    fecha_inicio: 2026-04-20   # lunes; 26 semanas completas
+    semanas: 26
+    # Pedidos de un día con factor semanal 1,0 (jueves) al inicio del histórico.
+    pedidos_dia_inicio: 180
+    # Crecimiento compuesto mensual (30 días): ~200 pedidos/día al final.
+    crecimiento_mensual: 0.02
+    # Variación entre días no explicada por el calendario (coef. de variación
+    # de un factor gamma de media 1). Genera sobredispersión frente a Poisson.
+    cv_ruido_diario: 0.10
+    # Factor por día de la semana (1 = lunes), tomado del seeder del ERP.
+    factor_dia_semana: {1: 0.85, 2: 0.90, 3: 0.95, 4: 1.00, 5: 1.20, 6: 1.45, 7: 0.75}
+    # Peso relativo de cada hora de apertura (se normaliza a media 1):
+    # pico de media mañana y pico más fuerte después del horario laboral.
+    perfil_horario: {8: 0.5, 9: 0.8, 10: 1.2, 11: 1.4, 12: 1.2, 13: 0.8, 14: 0.6,
+                     15: 0.6, 16: 0.7, 17: 0.9, 18: 1.3, 19: 1.5, 20: 1.1}
+    # Líneas (artículos distintos) por pedido: 1 + binomial negativa.
+    lineas_media: 12
+    lineas_dispersion: 4       # parámetro n de la binomial negativa (menor = más dispersa)
+    # Proporción de pedidos con retiro en sucursal (ERP: 62 %).
+    proporcion_retiro: 0.62
