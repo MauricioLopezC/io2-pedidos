@@ -1,14 +1,14 @@
 """Paso 1: congela el histórico del ERP y genera el histórico sintético del estudio.
 
 Salidas:
-- datos/raw/erp_web_orders.csv: pedidos online del ERP (solo si se pasa --desde-erp o
-  todavía no existe y la base está disponible). Se versiona.
+- datos/raw/erp_web_orders.csv: pedidos online del ERP, solo con --desde-erp. Se versiona,
+  así que el resto del pipeline no necesita la base del ERP.
 - datos/procesados/pedidos.csv: pedidos sintéticos (llegada, líneas, método de entrega).
 - datos/procesados/serie_horaria.csv: pedidos por hora de apertura, con ceros.
 - datos/procesados/tasa_esperada.csv: λ(d, h) verdadera del generador, para validar.
 - datos/procesados/resumen_datos.csv: indicadores ERP vs. sintético.
 
-Uso: python scripts/01_preparar_datos.py [--desde-erp]
+Uso: python scripts/01_preparar_datos.py [--desde-erp RUTA/database.sqlite]
 """
 
 import argparse
@@ -28,8 +28,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
         "--desde-erp",
-        action="store_true",
-        help="vuelve a exportar el histórico desde la base SQLite del ERP",
+        metavar="RUTA",
+        type=Path,
+        help="vuelve a exportar el histórico desde la base SQLite del ERP en RUTA",
     )
     args = parser.parse_args()
 
@@ -38,11 +39,15 @@ def main() -> int:
     apertura, cierre = cfg["hora_apertura"], cfg["hora_cierre"]
 
     erp_csv = RAIZ / cfg["erp_csv"]
-    if args.desde_erp or not erp_csv.exists():
-        erp = datos.leer_erp_sqlite(cfg["erp_sqlite"])
+    if args.desde_erp is not None:
+        erp = datos.leer_erp_sqlite(args.desde_erp)
         erp_csv.parent.mkdir(parents=True, exist_ok=True)
         erp.to_csv(erp_csv, index=False)
         print(f"ERP exportado: {len(erp)} pedidos -> {erp_csv.relative_to(RAIZ)}")
+    elif not erp_csv.exists():
+        parser.error(
+            f"falta {erp_csv.relative_to(RAIZ)}; exportalo con --desde-erp RUTA/database.sqlite"
+        )
     erp = datos.leer_erp_csv(erp_csv)
 
     params = datos.ParametrosGenerador.desde_config(config)

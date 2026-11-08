@@ -2,10 +2,8 @@
 
 # --- Datos (Persona A) -------------------------------------------------------
 datos:
-  # Base del ERP La Linda, leída en modo solo lectura para congelar su histórico.
-  # Solo hace falta para regenerar datos/raw/erp_web_orders.csv; el resto del
-  # pipeline usa el CSV versionado.
-  erp_sqlite: ~/Workspace/LaLinda/la-linda-app/database/database.sqlite
+  # Histórico del ERP La Linda congelado y versionado. Para regenerarlo:
+  #   python scripts/01_preparar_datos.py --desde-erp RUTA/database.sqlite
   erp_csv: datos/raw/erp_web_orders.csv
 
   # Horario de atención del sector de preparación: [apertura, cierre).
