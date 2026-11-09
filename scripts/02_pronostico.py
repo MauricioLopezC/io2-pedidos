@@ -82,7 +82,7 @@ def tabla_latex(errores: pd.DataFrame) -> str:
 def figura(prueba: pd.DataFrame, metodos: list[str], ruta: Path) -> None:
     semana = prueba[prueba.index >= prueba.index.max().normalize() - pd.Timedelta(days=6)]
     x = range(len(semana))
-    fig, ax = plt.subplots(figsize=(10, 3.6))
+    fig, ax = plt.subplots(figsize=(6.3, 2.9))  # ancho de texto: letra a tamaño real
     ax.bar(x, semana["real"], color="0.82", width=1.0, label="Pedidos observados")
     ax.plot(x, semana["tasa_verdadera"], color="black", linestyle="--", linewidth=1, label="Tasa verdadera")
     estilos = {"ingenuo": ("#d1495b", "-"), "media": ("#00798c", "-")}
@@ -93,12 +93,16 @@ def figura(prueba: pd.DataFrame, metodos: list[str], ruta: Path) -> None:
     dias = semana.index.normalize()
     inicios = [i for i in range(len(dias)) if i == 0 or dias[i] != dias[i - 1]]
     etiquetas = ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"]
-    ax.set_xticks([i + 6 for i in inicios], [f"{etiquetas[dias[i].day_of_week]} {dias[i]:%d/%m}" for i in inicios])
+    ax.set_xticks(
+        [i + 6 for i in inicios],
+        [f"{etiquetas[dias[i].day_of_week]} {dias[i]:%d/%m}" for i in inicios],
+        fontsize=8,
+    )
     for i in inicios[1:]:
         ax.axvline(i - 0.5, color="0.6", linewidth=0.5)
     ax.set_xlim(-0.5, len(semana) - 0.5)
     ax.set_ylabel("Pedidos por hora")
-    ax.legend(loc="upper left", fontsize=8, ncol=2, frameon=False)
+    ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), fontsize=7.5, ncol=4, frameon=False)
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
     fig.savefig(ruta, metadata={"CreationDate": None})  # misma salida en cada corrida

@@ -1,4 +1,55 @@
 \section{Marco teórico}
 \subsection{Pronósticos}
+\label{sec:marco-pronosticos}
+
+Una serie de tiempo es una sucesión de observaciones $y_t$ de una variable registradas en períodos consecutivos e igualmente espaciados.
+Su comportamiento suele describirse mediante un nivel, una tendencia que lo desplaza con el tiempo, una estacionalidad que repite un patrón con período fijo $m$ y un componente aleatorio sin estructura.
+Pronosticar consiste en estimar valores futuros $\hat{y}_{T+h}$ a partir de las observaciones disponibles hasta el período $T$, donde $h$ es el horizonte del pronóstico \cite{hyndman_athanasopoulos_fpp3}.
+
+\subsubsection{Promedio móvil}
+La técnica del promedio móvil supone que la serie fluctúa alrededor de un nivel constante, $y_t = b + \varepsilon_t$, con un ruido $\varepsilon_t$ de media cero y varianza constante \cite{taha_io_2004}.
+El nivel se estima con el promedio de las $n$ observaciones más recientes, a las que se asigna igual importancia:
+\begin{equation}
+  \hat{y}_{t+1} = \frac{1}{n} \sum_{i=0}^{n-1} y_{t-i}.
+\end{equation}
+No existe una regla exacta para elegir $n$.
+Un valor grande suaviza mejor el ruido cuando la serie es estable, pero suprime la tendencia si los datos crecen o decrecen, mientras que un valor pequeño sigue más rápido los cambios a costa de un pronóstico más ruidoso \cite{taha_io_2004}.
+
+\subsubsection{Métodos estacionales de referencia}
+Cuando la serie tiene estacionalidad, el promedio simple de los últimos períodos mezcla momentos del ciclo que no son comparables.
+El método ingenuo estacional evita ese problema pronosticando cada período con el valor observado en el mismo momento del ciclo anterior \cite{hyndman_athanasopoulos_fpp3}:
+\begin{equation}
+  \hat{y}_{T+h} = y_{T+h-m}, \qquad 1 \le h \le m.
+\end{equation}
+Es el punto de comparación mínimo que un método más elaborado debería superar.
+
+En este trabajo la serie es la cantidad de pedidos por hora de atención, y su estacionalidad combina un patrón dentro del día con otro entre días de la semana.
+Ambos se capturan comparando cada hora con la misma hora del mismo día de semanas anteriores.
+Si $y_{d,h}$ es la cantidad de pedidos del día $d$ en la hora $h$, el ingenuo estacional es $\hat{y}_{d,h} = y_{d-7,h}$.
+La media estacional aplica el promedio móvil a la subserie de cada hora y día de la semana, promediando las últimas $k$ semanas:
+\begin{equation}
+  \hat{y}_{d,h} = \frac{1}{k} \sum_{j=1}^{k} y_{d-7j,\,h}.
+  \label{eq:media-estacional}
+\end{equation}
+El ingenuo estacional es el caso particular $k = 1$.
+Como el rezago mínimo es de una semana, ambos métodos permiten pronosticar una semana completa usando solo datos anteriores a ella.
+
+\subsubsection{Evaluación del error}
+Un pronóstico se evalúa con datos que no se usaron para construirlo.
+En series de tiempo la partición respeta el orden cronológico: los primeros períodos sirven para ajustar y elegir el método, y un tramo final reservado mide el error que cabría esperar al pronosticar \cite{hyndman_athanasopoulos_fpp3}.
+Si además hay que elegir un parámetro, como $k$, se reserva un tramo de validación previo al de prueba, de modo que el error informado no esté influido por la elección.
+
+Con el error $e_t = \hat{y}_t - y_t$ definido como pronóstico menos valor real, las medidas usadas son:
+\begin{align}
+  \mathrm{MAE} &= \frac{1}{N} \sum_{t} \lvert e_t \rvert, &
+  \mathrm{RMSE} &= \sqrt{\frac{1}{N} \sum_{t} e_t^2}, &
+  \mathrm{Sesgo} &= \frac{1}{N} \sum_{t} e_t .
+\end{align}
+El error absoluto medio (MAE) se expresa en las mismas unidades que la serie y es fácil de interpretar.
+La raíz del error cuadrático medio (RMSE) penaliza más los errores grandes.
+El sesgo indica si el método sobrestima ($\mathrm{Sesgo} > 0$) o subestima ($\mathrm{Sesgo} < 0$) en promedio, algo relevante para dimensionar personal: subestimar la demanda conduce a dotaciones insuficientes.
+
+Cuando las llegadas siguen un proceso de Poisson, incluso un pronóstico que conociera la tasa verdadera $\lambda$ de cada hora tendría error, porque la cantidad observada varía con varianza $\lambda$.
+Ese error irreducible es un piso con el que conviene comparar los métodos para saber cuánto margen de mejora queda.
 \subsection{Teoría de colas}
 \subsection{Simulación de eventos discretos}
