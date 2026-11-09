@@ -1,0 +1,10 @@
+% Generado por scripts/02_pronostico.py; no editar a mano. Errores en pedidos por hora, salvo MAE diario (pedidos por día).
+\begin{tabular}{lrrrrr}
+\toprule
+Método & MAE & RMSE & Sesgo & MAE diario & MAE rel. (\%) \\
+\midrule
+Ingenuo estacional & \num{4.51} & \num{5.82} & \num{-0.49} & \num{24.5} & \num{28.2} \\
+Media estacional ($k=8$) & \num{3.42} & \num{4.48} & \num{-0.71} & \num{20.5} & \num{21.4} \\
+Tasa verdadera (referencia) & \num{3.21} & \num{4.25} & \num{-0.32} & \num{19.4} & \num{20.1} \\
+\bottomrule
+\end{tabular}
