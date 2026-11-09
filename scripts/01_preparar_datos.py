@@ -6,7 +6,7 @@ Salidas:
 - datos/procesados/pedidos.csv: pedidos sintéticos (llegada, líneas, método de entrega).
 - datos/procesados/serie_horaria.csv: pedidos por hora de apertura, con ceros.
 - datos/procesados/tasa_esperada.csv: λ(d, h) verdadera del generador, para validar.
-- datos/procesados/resumen_datos.csv: indicadores ERP vs. sintético.
+- resultados/datos_resumen.csv: indicadores ERP vs. sintético que cita el informe.
 
 Uso: python scripts/01_preparar_datos.py [--desde-erp RUTA/database.sqlite]
 """
@@ -22,6 +22,7 @@ from pedidos import datos
 
 RAIZ = Path(__file__).resolve().parents[1]
 PROCESADOS = RAIZ / "datos" / "procesados"
+RESULTADOS = RAIZ / "resultados"
 
 
 def main() -> int:
@@ -66,12 +67,23 @@ def main() -> int:
             "sintetico": datos.resumen(pedidos, apertura, cierre),
         }
     )
+    tabla.loc["tasa_hora_media", "sintetico"] = tasa.mean()
+    tabla.loc["tasa_hora_max", "sintetico"] = tasa.max()
+    configurado = pd.Series(params.factor_dia_semana) / params.factor_dia_semana[4]
     semanal = pd.DataFrame(
-        {"erp": datos.factor_semanal(erp["llegada"]), "sintetico": datos.factor_semanal(pedidos["llegada"])}
+        {
+            "erp": datos.factor_semanal(erp["llegada"]),
+            "sintetico": datos.factor_semanal(pedidos["llegada"]),
+            "configurado": configurado,
+        }
     )
     semanal.index = [f"factor_dia_{d}" for d in semanal.index]
     tabla = pd.concat([tabla, semanal])
-    tabla.to_csv(PROCESADOS / "resumen_datos.csv")
+    tabla.loc["factor_dif_max_sintetico_vs_configurado", "sintetico"] = (
+        (semanal["sintetico"] - semanal["configurado"]).abs().max()
+    )
+    RESULTADOS.mkdir(exist_ok=True)
+    tabla.rename_axis("indicador").to_csv(RESULTADOS / "datos_resumen.csv")
 
     print(f"Sintético: {len(pedidos)} pedidos en {len(serie) // (cierre - apertura)} días")
     print(tabla.round(3).to_string())

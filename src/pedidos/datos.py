@@ -211,6 +211,7 @@ def resumen(pedidos: pd.DataFrame, hora_apertura: int, hora_cierre: int) -> dict
         "dias": len(diarios),
         "pedidos_dia_media": diarios.mean(),
         "pedidos_dia_varianza": diarios.var(),
+        "horas_de_atencion": len(horaria),
         "pedidos_hora_media": horaria.mean(),
         "pedidos_hora_max": horaria.max(),
         "horas_sin_pedidos": (horaria == 0).mean(),
