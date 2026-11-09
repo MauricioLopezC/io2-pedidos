@@ -10,6 +10,9 @@ Salidas:
 - resultados/pronostico_prueba.csv: real, tasa verdadera y pronósticos en la prueba.
 - resultados/pronostico_semana_siguiente.csv: pronóstico e intervalo de la semana
   posterior al histórico, con el método elegido en validación.
+- resultados/pronostico_resumen.csv: partición, k y método elegidos y cifras derivadas
+  que cita el informe (reducción del MAE, sesgo diario, cuantiles de residuos, totales
+  de la semana siguiente).
 - informe/tablas/pronostico_errores.tex y informe/figuras/pronostico_prueba.pdf.
 
 Uso: python scripts/02_pronostico.py
@@ -155,12 +158,59 @@ def main() -> int:
     (TABLAS / "pronostico_errores.tex").write_text(tabla_latex(en_prueba))
     figura(tabla_prueba, ["ingenuo", media], FIGURAS / "pronostico_prueba.pdf")
 
-    print(f"Validación: {validacion.min():%d/%m} a {validacion.max():%d/%m}; prueba: {prueba.min():%d/%m} a {prueba.max():%d/%m}")
-    print(f"k elegido en validación: {k}; método elegido: {elegido}")
+    indicadores = resumen(errores.loc["prueba"], tabla_prueba, elegido, residuos, siguiente, cfg["nivel_intervalo"])
+    indicadores = pd.concat(
+        [
+            pd.Series(
+                {
+                    "inicio_validacion": f"{validacion.min():%Y-%m-%d}",
+                    "inicio_prueba": f"{prueba.min():%Y-%m-%d}",
+                    "fin_prueba": f"{prueba.max():%Y-%m-%d}",
+                    "k_elegido": k,
+                    "metodo_elegido": elegido,
+                }
+            ),
+            indicadores,
+        ]
+    )
+    indicadores.rename("valor").rename_axis("indicador").to_csv(RESULTADOS / "pronostico_resumen.csv")
+
     print(errores.round(3).to_string())
-    total = siguiente.groupby(siguiente.index.normalize())["pronostico"].sum()
-    print("\nSemana siguiente, pedidos por día:\n" + total.round(1).to_string())
+    print("\n" + indicadores.to_string())
     return 0
+
+
+def resumen(
+    errores_prueba: pd.DataFrame,
+    tabla_prueba: pd.DataFrame,
+    elegido: str,
+    residuos: pd.Series,
+    siguiente: pd.DataFrame,
+    nivel: float,
+) -> pd.Series:
+    """Cifras derivadas que cita el informe, para no calcularlas a mano."""
+    mae = errores_prueba["mae"]
+    dias_prueba = tabla_prueba.index.normalize().nunique()
+    demanda_diaria = tabla_prueba["real"].sum() / dias_prueba
+    sesgo_diario = (tabla_prueba[elegido] - tabla_prueba["real"]).sum() / dias_prueba
+    alfa = (1 - nivel) / 2
+    por_dia = siguiente.groupby(siguiente.index.normalize())["pronostico"].sum()
+    pico = siguiente["pronostico"].idxmax()
+
+    valores = {
+        "reduccion_mae_vs_ingenuo": 1 - mae[elegido] / mae["ingenuo"],
+        "distancia_mae_al_piso": mae[elegido] - mae["tasa_verdadera"],
+        "demanda_diaria_prueba": demanda_diaria,
+        "sesgo_diario_prueba": sesgo_diario,
+        "sesgo_relativo_prueba": sesgo_diario / demanda_diaria,
+        f"residuo_cuantil_{alfa:.2f}": residuos.quantile(alfa),
+        f"residuo_cuantil_{1 - alfa:.2f}": residuos.quantile(1 - alfa),
+        "pico_semana_siguiente": siguiente.loc[pico, "pronostico"],
+        "hora_pico_semana_siguiente": f"{pico:%Y-%m-%d %H:%M}",
+    }
+    for dia, total in por_dia.items():
+        valores[f"pedidos_{dia:%Y-%m-%d}"] = total
+    return pd.Series(valores).map(lambda v: round(v, 4) if isinstance(v, float) else v)
 
 
 if __name__ == "__main__":
