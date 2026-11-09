@@ -1,4 +1,43 @@
 \section{Resultados}
 \subsection{Pronóstico}
+\label{sec:resultados-pronostico}
+
+La serie horaria se dividió en tres tramos consecutivos.
+Las primeras 18 semanas, del 20 de abril al 23 de agosto, solo aportan observaciones pasadas a los métodos.
+Las cuatro semanas siguientes, del 24 de agosto al 20 de septiembre, se usaron para elegir la cantidad $k$ de semanas de la media estacional entre 2, 4 y 8, y para decidir entre esta y el ingenuo estacional.
+Las cuatro semanas finales, del 21 de septiembre al 18 de octubre, se reservaron como prueba y no intervinieron en ninguna elección.
+Cada semana se pronosticó completa al comenzar, con la Ecuación~\eqref{eq:media-estacional}, de modo que el horizonte va de una hora a siete días.
+
+En validación, el MAE fue de 4,24 pedidos por hora para el ingenuo estacional y de 3,74, 3,47 y 3,33 para la media estacional con $k = 2$, 4 y 8.
+Se eligió la media estacional de ocho semanas.
+La Tabla~\ref{tab:errores-pronostico} muestra los errores en el período de prueba, junto con el que se obtendría usando la tasa verdadera del generador como pronóstico.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Errores del pronóstico en las cuatro semanas de prueba, en pedidos por hora (el MAE diario, en pedidos por día).}
+  \label{tab:errores-pronostico}
+  \input{tablas/pronostico_errores}
+\end{table}
+
+La media estacional redujo el MAE un 24~\% respecto del ingenuo estacional, de 4,51 a 3,42 pedidos por hora, y quedó a solo 0,21 del piso de 3,21 que impone el azar de las llegadas.
+El ingenuo estacional copia el ruido de una única semana, mientras que promediar ocho semanas lo atenúa, como se ve en la Figura~\ref{fig:pronostico-prueba}.
+En términos relativos, el pronóstico elegido se equivoca en promedio un 21~\% de la demanda de cada hora, pero ese error se compensa en parte dentro del día: el error medio de los totales diarios es de 20,5 pedidos sobre unos 208 por día.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{pronostico_prueba}
+  \caption{Pedidos por hora observados en la última semana de prueba, pronósticos de ambos métodos y tasa verdadera del generador.}
+  \label{fig:pronostico-prueba}
+\end{figure}
+
+Ambos métodos subestiman la demanda.
+El sesgo de la media de ocho semanas, de $-0{,}71$ pedidos por hora, equivale a unos 9 pedidos por día, el 4,4~\% de la demanda de prueba.
+Es la consecuencia esperada de promediar un período largo en una serie con tendencia creciente: el promedio queda rezagado respecto del nivel actual \cite{taha_io_2004}.
+Para la planificación esto implica que dimensionar con el pronóstico sin corrección tiende a quedarse corto, por lo que conviene que el análisis de sensibilidad considere demandas superiores a la pronosticada.
+
+Con el método elegido se pronosticó la semana posterior al histórico, del 19 al 25 de octubre.
+El pronóstico va de 159 pedidos el domingo a 185 el jueves y 300 el sábado, con un máximo de 38 pedidos por hora el sábado a las 19.
+Los residuos del período de prueba ubican el 80~\% de los valores reales entre 4,4 pedidos por hora por debajo y 6,6 por encima del pronóstico; la asimetría refleja la subestimación señalada.
+Este perfil horario y su intervalo son la entrada de los escenarios de demanda simulados.
 \subsection{Escenarios}
 \subsection{Sensibilidad}
