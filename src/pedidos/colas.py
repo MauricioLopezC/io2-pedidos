@@ -5,6 +5,7 @@ from numbers import Integral
 
 
 def validar_dotacion(dotacion: int) -> None:
+    """Exige una cantidad entera y positiva de preparadores (se rechazan bool y 1.5)."""
     if isinstance(dotacion, bool) or not isinstance(dotacion, Integral) or dotacion < 1:
         raise ValueError("La dotación debe ser un entero positivo.")
 

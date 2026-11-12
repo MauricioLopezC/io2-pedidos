@@ -85,6 +85,9 @@ def test_rechaza_hora_faltante():
 
 
 def test_contraste_mmc_y_little():
+    # Exige que los 6 IC del 99 % contengan la teoría a la vez. Con la semilla de
+    # config es determinístico; si se cambia la sección verificacion, un fallo
+    # aislado puede ser azar (~6 %) y conviene probar otra semilla antes de buscar un error.
     replicas, tabla = verificar_mmc(CONFIG["verificacion"])
     assert replicas.semilla.is_unique
     assert tabla.contiene_teoria.all(), tabla
