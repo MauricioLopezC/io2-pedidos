@@ -55,7 +55,7 @@ Lo que sí se aprovecha: el **calendario semanal**, la **proporción retiro/env�
 - Retiro con probabilidad 0,62, como en el ERP.
 
 Resultado con la semilla acordada: 35 402 pedidos, 194,5 por día y 15 por hora en promedio, con un máximo de 47 en una hora.
-El factor semanal sintético difiere del configurado en el seeder en menos de 0,02 y del observado en la base del ERP en menos de 0,07, salvo el lunes (0,87 contra 0,77, que en el ERP sale de solo 26 lunes con 1 o 2 pedidos); ver `datos/procesados/resumen_datos.csv`.
+El factor semanal sintético difiere del configurado en el seeder en 0,024 como máximo (sábado) y del observado en la base del ERP en menos de 0,07, salvo el lunes (0,87 contra 0,77); ver `resultados/datos_resumen.csv`.
 
 ### Por qué unos 200 pedidos por día
 
@@ -74,6 +74,6 @@ Es la escala de un supermercado regional con venta online consolidada; cambiar `
 - `datos/procesados/pedidos.csv`: pedidos sintéticos (`pedido_id`, `llegada`, `lineas`, `metodo_entrega`).
 - `datos/procesados/serie_horaria.csv`: pedidos por hora de apertura, con ceros (entrada del pronóstico).
 - `datos/procesados/tasa_esperada.csv`: λ(d, h) verdadera, útil para validar pronóstico y simulación.
-- `datos/procesados/resumen_datos.csv`: comparación ERP vs. sintético.
+- `resultados/datos_resumen.csv`: comparación ERP vs. sintético.
 
 Los archivos de `datos/procesados/` no se versionan: se regeneran de forma determinística.

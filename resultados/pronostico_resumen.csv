@@ -1,0 +1,22 @@
+indicador,valor
+inicio_validacion,2026-08-24
+inicio_prueba,2026-09-21
+fin_prueba,2026-10-18
+k_elegido,8
+metodo_elegido,media_8s
+reduccion_mae_vs_ingenuo,0.2399
+distancia_mae_al_piso,0.2147
+demanda_diaria_prueba,208.0357
+sesgo_diario_prueba,-9.1652
+sesgo_relativo_prueba,-0.0441
+residuo_cuantil_0.10,-4.375
+residuo_cuantil_0.90,6.625
+pico_semana_siguiente,38.25
+hora_pico_semana_siguiente,2026-10-24 19:00
+pedidos_2026-10-19,181.5
+pedidos_2026-10-20,177.5
+pedidos_2026-10-21,190.875
+pedidos_2026-10-22,185.25
+pedidos_2026-10-23,240.125
+pedidos_2026-10-24,300.5
+pedidos_2026-10-25,158.75

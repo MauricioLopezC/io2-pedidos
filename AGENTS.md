@@ -37,7 +37,7 @@ Documentos de referencia, leerlos antes de decidir algo de fondo:
 | `notebooks/` | Exploración. Nada del informe sale solo de un notebook. |
 | `docs/` | Notas de diseño y decisiones del equipo, en Markdown. |
 
-Estado al momento de escribir esto: `datos` está implementado y testeado; `pronostico`, `colas`, `simulacion`, `experimentos` y los scripts 02–05 están vacíos.
+Estado al momento de escribir esto: `datos` y `pronostico` (scripts 01 y 02) están implementados y testeados; `colas`, `simulacion`, `experimentos` y los scripts 03–05 están vacíos.
 Revisar el árbol antes de suponer que algo existe.
 
 ## 3. Comandos

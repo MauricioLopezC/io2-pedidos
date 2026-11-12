@@ -35,6 +35,16 @@ datos:
     # Proporción de pedidos con retiro en sucursal (ERP: 62 %).
     proporcion_retiro: 0.62
 
+# --- Pronóstico (Persona A) --------------------------------------------------
+pronostico:
+  # Últimas semanas de la serie: validación para elegir k y prueba para informar.
+  semanas_validacion: 4
+  semanas_prueba: 4
+  # Candidatos de k para la media estacional (promedio de las últimas k semanas).
+  semanas_media: [2, 4, 8]
+  # Cobertura del intervalo empírico del pronóstico de la semana siguiente.
+  nivel_intervalo: 0.8
+
 # --- Servicio y verificación (Persona B) -------------------------------------
 servicio:
   minutos_fijos: 4.0          # Hipótesis de trabajo por pedido, independiente del tamaño.

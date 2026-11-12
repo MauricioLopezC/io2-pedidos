@@ -1,4 +1,89 @@
 \section{Metodología}
 \subsection{Datos}
+\label{sec:datos}
+
+\subsubsection{Histórico del ERP}
+El ERP registra los pedidos online en la tabla de pedidos web, con la fecha y hora de ingreso, pago, inicio de preparación y entrega, el método de entrega (retiro en sucursal o envío) y los artículos de cada pedido.
+Su histórico es sintético: lo genera un proceso de carga inicial con semilla fija que simula unos seis meses de operación para alimentar el tablero gerencial.
+La inspección de ese histórico encontró 369 pedidos entre el 17 de abril y el 18 de octubre de 2026, con un promedio de 1,99 pedidos por día.
+Se tomó la hora de ingreso del pedido como su llegada al proceso, ya que el pago se registra entre 2 y 8 minutos después.
+
+El histórico del ERP no alcanza para responder la pregunta del estudio por cuatro motivos:
+\begin{itemize}
+  \item el volumen es muy bajo: 0,15 pedidos por hora de atención y 86~\% de horas sin pedidos, de modo que un solo preparador estaría ocioso casi todo el tiempo;
+  \item las llegadas se reparten de manera uniforme entre las 8 y las 16 horas, sin el patrón horario que un pronóstico por hora debería captar;
+  \item no hay tiempos de preparación: el inicio de la preparación es un retardo aleatorio independiente de la carga y no se registra su fin;
+  \item las fechas dependen del día en que se ejecuta la carga inicial, por lo que el histórico no es reproducible.
+\end{itemize}
+Por eso el histórico se congeló en un archivo versionado y se usó para calibrar un generador propio, conservando lo que sí aporta: el patrón semanal, la proporción de retiros y la definición de llegada.
+
+\subsubsection{Histórico sintético del estudio}
+Las llegadas se generaron con un proceso de Poisson no homogéneo cuya tasa es constante dentro de cada hora de atención:
+\begin{equation}
+  \lambda_{d,h} = \frac{N_0 \, (1 + g)^{t_d/30} \; f_{s(d)} \; p_h}{13} \; \xi_d ,
+  \label{eq:tasa-generador}
+\end{equation}
+donde $N_0$ es el nivel inicial de pedidos por día, $g$ el crecimiento mensual, $t_d$ los días transcurridos desde el inicio, $f_{s(d)}$ el factor del día de la semana, $p_h$ el peso de la hora $h$ normalizado a media uno sobre las 13 horas de atención y $\xi_d$ un factor aleatorio diario de media uno.
+En cada hora la cantidad de pedidos es Poisson de media $\lambda_{d,h}$ y sus instantes de llegada se distribuyen de manera uniforme dentro de la hora.
+Cada pedido recibe además una cantidad de líneas (artículos distintos), que el modelo de preparación puede usar para el tiempo de servicio, y un método de entrega.
+La Tabla~\ref{tab:parametros-generador} resume los parámetros, que se encuentran en el archivo de configuración del proyecto.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Parámetros del generador de pedidos.}
+  \label{tab:parametros-generador}
+  \begin{tabular}{lp{8.5cm}}
+    \toprule
+    Parámetro & Valor \\
+    \midrule
+    Período & 26 semanas, del lunes 20/04/2026 al domingo 18/10/2026 \\
+    Horario de atención & De 8 a 21 horas, todos los días (13 horas) \\
+    Nivel inicial $N_0$ & 180 pedidos por día con factor semanal 1 \\
+    Crecimiento $g$ & 2~\% mensual compuesto (unos 200 pedidos por día al final) \\
+    Factor semanal $f$ & Lun 0,85; mar 0,90; mié 0,95; jue 1,00; vie 1,20; sáb 1,45; dom 0,75 (tomado del ERP) \\
+    Perfil horario $p_h$ & Pico a media mañana (11 h) y pico mayor a la salida del horario laboral (19 h) \\
+    Ruido diario $\xi_d$ & Gamma de media 1 y coeficiente de variación 0,10 \\
+    Líneas por pedido & $1 +$ binomial negativa, con media 12 \\
+    Retiro en sucursal & 62~\% de los pedidos (como en el ERP); el resto, envío \\
+    Semilla & 20260416, la misma del generador del ERP \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+El volumen se eligió para que la dotación sea una decisión con alternativas reales.
+Con unos 200 pedidos diarios, un día medio recibe unos 15 pedidos por hora y la hora pico de un sábado unos 35, de modo que, con preparaciones de alrededor de diez minutos, la carga varía entre unos dos y unos seis preparadores ocupados.
+Corresponde a la escala de un supermercado regional con venta online consolidada, y modificar $N_0$ reescala todo el estudio sin cambiar el código.
+
+El generador produjo 35\,402 pedidos en 182 días, con un promedio de 194,5 pedidos por día.
+Su factor semanal observado difiere del configurado en 0,024 como máximo, y la proporción de retiros resultó de 62,3~\%.
+A partir de esos pedidos se construyó la serie de pedidos por hora de atención, completando con ceros las horas sin pedidos, con 182 días por 13 horas, es decir 2\,366 observaciones.
+Como el generador conoce la tasa verdadera $\lambda_{d,h}$ (sin el ruido diario), esta se conserva como referencia para evaluar el pronóstico.
+
 \subsection{Supuestos}
+\label{sec:supuestos}
+
+Los supuestos del modelo se agrupan según el aspecto del sistema al que se refieren.
+
+\paragraph{Demanda.}
+\begin{itemize}
+  \item Los pedidos llegan de manera independiente entre sí, según un proceso de Poisson cuya tasa es constante dentro de cada hora y varía entre horas y días según la Ecuación~\eqref{eq:tasa-generador}.
+  \item Solo se reciben pedidos durante el horario de atención, de 8 a 21 horas.
+  \item La llegada de un pedido al proceso coincide con su ingreso al sistema; el tiempo de pago, de pocos minutos, no se modela.
+  \item La variación diaria no explicada por el calendario ($\xi_d$) no es observable para el pronóstico.
+\end{itemize}
+
+\paragraph{Proceso de preparación.}
+\begin{itemize}
+  \item Los pedidos esperan en una fila común y se atienden por orden de llegada.
+  \item Los preparadores son equivalentes y cada uno prepara un único pedido a la vez, sin interrupciones.
+  \item Hay disponibilidad de todos los productos: no se modelan faltantes ni reemplazos.
+  \item El tiempo de preparación de cada pedido es aleatorio e independiente de los demás; su distribución se detalla en el modelo conceptual de la sección de Desarrollo.
+  \item La dotación se mantiene fija durante cada jornada simulada.
+\end{itemize}
+
+\paragraph{Alcance.}
+\begin{itemize}
+  \item El estudio termina cuando el pedido queda preparado; el ruteo dentro del depósito, el reparto y los turnos laborales quedan fuera del modelo.
+  \item Las conclusiones se refieren al sistema modelado y a sus datos sintéticos, no a una operación real medida.
+\end{itemize}
 \subsection{Diseño experimental}
