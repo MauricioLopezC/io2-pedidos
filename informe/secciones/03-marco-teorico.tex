@@ -1,4 +1,21 @@
 \section{Marco teórico}
 \subsection{Pronósticos}
 \subsection{Teoría de colas}
+Una fila FIFO asigna el siguiente preparador libre al pedido que lleva más tiempo esperando.
+El modelo M/M/$c$ supone llegadas Poisson con tasa constante $\lambda$, servicios exponenciales independientes de tasa $\mu$ por preparador, $c$ preparadores equivalentes y espacio de espera ilimitado \cite{bertsekas_colas}.
+Si las tasas se expresan por hora, la carga ofrecida $a=\lambda/\mu$ mide cuántos preparadores ocuparía la demanda en promedio y $\rho=a/c$ es la fracción ocupada de la capacidad.
+Existe equilibrio estacionario cuando $\rho<1$.
+La fórmula de Erlang C da la probabilidad de que un pedido deba esperar:
+\[
+ P_0=\left(\sum_{k=0}^{c-1}\frac{a^k}{k!}+
+              \frac{a^c}{c!(1-\rho)}\right)^{-1},
+ \qquad P_{\mathrm{espera}}=P_0\,\frac{a^c}{c!(1-\rho)}.
+\]
+En equilibrio, la espera media es $W_q=P_{\mathrm{espera}}/(c\mu-\lambda)$ y el tiempo medio hasta estar listo es $W=W_q+1/\mu$, ambos en horas.
+Por la ley de Little, la cantidad media en espera es $L_q=\lambda W_q$ y la cantidad media en el sistema es $L=\lambda W$.
+La comparación con tiempos en minutos requiere convertir la tasa a pedidos por minuto.
 \subsection{Simulación de eventos discretos}
+La simulación avanza el reloj entre llegadas, inicios y fines de preparación.
+En cada evento se actualiza quién espera y quién ocupa un preparador.
+Este mecanismo permite que cambie la demanda al pasar de una hora a otra mientras los pedidos ya admitidos conservan su lugar.
+En SimPy, cada pedido se representa mediante un proceso que solicita y luego libera una unidad de un recurso compartido \cite{simpy_shared_resources}.

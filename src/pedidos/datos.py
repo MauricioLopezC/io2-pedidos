@@ -126,6 +126,14 @@ def tasa_esperada(params: ParametrosGenerador) -> pd.Series:
     return pd.Series(valores, index=indice, name="tasa")
 
 
+def generar_lineas(rng: np.random.Generator, cantidad: int, media: float, dispersion: float) -> np.ndarray:
+    """Suma una línea a una binomial negativa para obtener pedidos de tamaño positivo."""
+    if not np.isfinite(media) or media < 1 or not np.isfinite(dispersion) or dispersion <= 0:
+        raise ValueError("La media de líneas debe ser al menos uno y la dispersión positiva.")
+    p = dispersion / (dispersion + (media - 1))
+    return 1 + rng.negative_binomial(dispersion, p, size=cantidad)
+
+
 def generar_pedidos(params: ParametrosGenerador) -> pd.DataFrame:
     """Genera el histórico sintético de pedidos online.
 
@@ -147,9 +155,7 @@ def generar_pedidos(params: ParametrosGenerador) -> pd.DataFrame:
     llegada = llegada.floor("s").sort_values()
 
     n = len(llegada)
-    media_extra = params.lineas_media - 1
-    p = params.lineas_dispersion / (params.lineas_dispersion + media_extra)
-    lineas = 1 + rng.negative_binomial(params.lineas_dispersion, p, size=n)
+    lineas = generar_lineas(rng, n, params.lineas_media, params.lineas_dispersion)
     retiro = rng.random(n) < params.proporcion_retiro
 
     return pd.DataFrame(

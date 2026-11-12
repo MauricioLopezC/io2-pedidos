@@ -34,3 +34,18 @@ datos:
     lineas_dispersion: 4       # parámetro n de la binomial negativa (menor = más dispersa)
     # Proporción de pedidos con retiro en sucursal (ERP: 62 %).
     proporcion_retiro: 0.62
+
+# --- Servicio y verificación (Persona B) -------------------------------------
+servicio:
+  minutos_fijos: 4.0          # Hipótesis de trabajo por pedido, independiente del tamaño.
+  minutos_por_linea: 0.5      # Incremento por artículo distinto; variar en la sensibilidad.
+
+verificacion:
+  llegadas_h: 12              # Caso sintético estable con esperas observables.
+  servicio_h: 9               # Capacidad individual por hora con servicio exponencial.
+  dotacion: 2                 # Permite verificar una fila con servidores en paralelo.
+  calentamiento_h: 24         # Excluir el transitorio del sistema inicialmente vacío.
+  observacion_h: 240          # Ventana de medición posterior al calentamiento.
+  replicas: 64                # Medias independientes para estimar el error Monte Carlo.
+  confianza: 0.99             # Cobertura nominal marginal del intervalo normal aproximado.
+  semilla: 20261111           # Raíz reproducible de las semillas de réplica.

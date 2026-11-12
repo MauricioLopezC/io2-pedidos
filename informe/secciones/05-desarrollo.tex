@@ -1,4 +1,32 @@
 \section{Desarrollo}
 \subsection{Modelo conceptual y matemático}
+La jornada comienza con la fila vacía y una dotación fija.
+Para cada hora de apertura se toma la cantidad esperada de pedidos del pronóstico, se sortea un conteo Poisson con esa media y se distribuyen sus llegadas uniformemente dentro de la hora.
+Así se representa una intensidad constante en cada franja.
+Los pedidos se atienden por orden de llegada y cada preparación continúa hasta que el pedido queda listo.
+Para un pedido con $\ell$ artículos distintos se supone una duración $s(\ell)=b+m\ell$, donde $b$ es el tiempo fijo por pedido y $m$ el tiempo adicional por línea, ambos expresados en minutos y configurables para la sensibilidad.
+La cantidad de líneas se genera con la misma distribución que el histórico sintético.
+El ERP carece de una marca de fin de preparación que permita estimar estos coeficientes.
+La tabla~\ref{tab:servicio} muestra los valores de partida acordados para la experimentación.
+\input{tablas/servicio}
 \subsection{Implementación computacional}
+El motor recibe para cada pedido su identificador, el instante de llegada $t_a$ y la duración del servicio.
+Al adquirir el recurso registra el inicio $t_i$ y al liberarlo registra el fin $t_f$.
+La espera individual es $t_i-t_a$ y el tiempo hasta que el pedido queda listo es $t_f-t_a$.
+Al cierre se cuentan los pedidos terminados, en preparación y en fila, incluyendo como terminados los que finalizan exactamente en ese instante.
+La simulación continúa hasta completar todos los admitidos para que el indicador de cumplimiento incluya a quienes todavía esperaban al cierre.
+La cola media se obtiene sumando los minutos de espera que transcurren durante la apertura y dividiendo por la duración de la jornada.
+Para la utilización se suman los minutos de servicio dentro de esa misma ventana y se divide por los minutos de capacidad disponible del conjunto de preparadores.
+La semilla registrada reproduce las llegadas y los tamaños de los pedidos al comparar dotaciones.
 \subsection{Verificación y validación}
+Se verificó el orden de atención mediante una traza resuelta a mano en la que una preparación atraviesa el cambio de hora y el pedido siguiente debe esperar a que termine.
+Las pruebas comprueban también la conservación al cierre, la espera nula cuando hay capacidad inmediata y el tratamiento de jornadas vacías.
+Para verificar las medidas promedio se ejecutó el mismo motor con demanda constante y tiempos de servicio exponenciales independientes.
+La tabla~\ref{tab:verificacion-mmc} compara el cálculo analítico con las medias de réplicas independientes después del calentamiento.
+Los intervalos son aproximaciones normales calculadas con el error estándar entre réplicas para cada indicador.
+Para el contraste de Little se calculó en cada réplica la diferencia entre la ocupación media observada y el producto de la tasa de llegadas observada por el tiempo medio de los pedidos admitidos en la ventana.
+Las áreas se recortaron en sus extremos y estos pedidos se siguieron hasta su finalización, por lo que puede quedar una diferencia de borde en una réplica finita.
+\input{tablas/verificacion_mmc}
+Los intervalos obtenidos contienen las referencias analíticas y el intervalo de la diferencia de Little contiene el cero.
+Este contraste verifica el mecanismo de espera en condiciones conocidas.
+La aplicación a la jornada del supermercado depende de la calidad del perfil horario y de la hipótesis sobre la duración del servicio, cuya influencia se evalúa al variar sus parámetros.
