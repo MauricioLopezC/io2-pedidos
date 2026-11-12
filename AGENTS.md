@@ -29,7 +29,7 @@ Documentos de referencia, leerlos antes de decidir algo de fondo:
 | `config/experimento.yaml` | **Todos** los parámetros del estudio, por sección y con responsable. |
 | `datos/raw/` | Datos originales versionados (`erp_web_orders.csv`). No se modifican a mano. |
 | `datos/procesados/` | Salidas de `make datos`. No se versionan; se regeneran de forma determinística. |
-| `src/pedidos/` | Paquete Python: `datos`, `pronostico`, `colas`, `simulacion`, `experimentos`. |
+| `src/pedidos/` | Paquete Python: `datos`, `pronostico`, `colas`, `simulacion`, `verificacion`, `experimentos`. |
 | `scripts/0N_*.py` | Pasos numerados del pipeline; leen config, llaman a `src/pedidos` y escriben salidas. |
 | `tests/` | pytest, un archivo por módulo de `src/pedidos`. |
 | `resultados/` | Salidas numéricas de los experimentos. |
@@ -37,8 +37,24 @@ Documentos de referencia, leerlos antes de decidir algo de fondo:
 | `notebooks/` | Exploración. Nada del informe sale solo de un notebook. |
 | `docs/` | Notas de diseño y decisiones del equipo, en Markdown. |
 
-Estado al momento de escribir esto: `datos` y `pronostico` (scripts 01 y 02) están implementados y testeados; `colas`, `simulacion`, `experimentos` y los scripts 03–05 están vacíos.
+Estado al momento de escribir esto: `datos`, `pronostico`, `colas`, `simulacion` y `verificacion` (scripts 01–03) están implementados y testeados; `experimentos` y los scripts 04–05 están vacíos.
 Revisar el árbol antes de suponer que algo existe.
+
+### Punto de partida para experimentos y sensibilidad (Persona C)
+
+Insumos ya disponibles:
+
+- **Demanda:** `resultados/pronostico_semana_siguiente.csv` (de `make pronostico`), con columnas `hora`, `pronostico`, `inferior`, `superior` en pedidos/h, para cada hora de apertura de la semana posterior al histórico.
+  El intervalo es empírico, con la cobertura de `pronostico.nivel_intervalo`.
+- **Simulador:** `pedidos.simulacion.simular_jornada(perfil, dotacion, plazo_min, semilla, config)`.
+  `perfil` es la Serie de **una** jornada: índice con todas las horas de apertura en orden (también las de tasa cero) y tasas en pedidos/h.
+  Devuelve `(detalle, resumen)`: `detalle` tiene una fila por pedido; `resumen` incluye `llegados`, `preparados_al_cierre`, `pendientes_al_cierre`, `espera_media_min`, `total_medio_min`, `proporcion_a_tiempo`, `cola_media`, `utilizacion` y `sistema_medio`.
+  Con la misma semilla, dotaciones distintas reciben exactamente los mismos pedidos (números aleatorios comunes).
+  Detalle de unidades y del uso con pedidos reservados: sección "Simular una jornada" del `README.md`.
+- **Sensibilidad al servicio:** se varía `servicio.minutos_fijos` y `servicio.minutos_por_linea` en una copia del dict de config; las llegadas no cambian con la misma semilla.
+
+**Decisiones pendientes** del equipo, que van a `config/` con su justificación **antes** de mirar resultados (§5): tiempo objetivo (`plazo_min`) y proporción exigida para considerarlo cumplido, definición de los niveles de demanda baja/media/alta, dotaciones a evaluar, número de réplicas y semilla raíz, y magnitudes de la sensibilidad.
+Ninguna está fijada todavía; no completarlas con valores plausibles sin acuerdo.
 
 ## 3. Comandos
 
