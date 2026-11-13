@@ -1,1 +1,62 @@
 \section{Anexos}
+
+\subsection{Reproducción del trabajo}
+\label{anexo:reproduccion}
+
+Todos los resultados del informe pueden regenerarse a partir de los archivos entregados.
+Se entrega el comprimido \texttt{io2-pedidos-v1.0-entrega.zip}, que contiene el código, la configuración, los datos, los resultados, este informe y el notebook ejecutado.
+El mismo contenido está disponible en el repositorio público \url{https://github.com/MauricioLopezC/io2-pedidos}, en la versión etiquetada \texttt{v1.0-entrega}.
+
+\subsubsection*{Requisitos}
+
+\begin{itemize}
+  \item Python 3.12 o posterior; las versiones exactas de las bibliotecas están fijadas en \texttt{requirements.txt}.
+  \item La reproducción se verificó con Python 3.14 en Linux.
+  \item Para recompilar este informe, además, una distribución de \LaTeX{} con \texttt{latexmk} y \texttt{biber}.
+\end{itemize}
+
+\subsubsection*{Pasos}
+
+Desde la carpeta \texttt{io2-pedidos}, se instalan las dependencias y el paquete del proyecto con \texttt{pip install -r requirements.txt}.
+A continuación hay dos alternativas equivalentes:
+
+\begin{enumerate}
+  \item \textbf{Notebook.} Abrir \texttt{notebooks/recorrido.ipynb} con \texttt{jupyter notebook} y ejecutar todas las celdas.
+  El notebook vuelve a correr el pipeline completo y compara la huella SHA-256 de cada archivo de resultados con la del archivo entregado.
+  Después recorre los datos, el pronóstico, la verificación, los experimentos y la sensibilidad.
+  \item \textbf{Línea de comandos.} Ejecutar \texttt{make all}, que corre los cinco scripts en orden y compila el informe.
+\end{enumerate}
+
+La ejecución completa demora del orden de dos minutos, la mayor parte en el análisis de sensibilidad.
+
+\subsubsection*{Determinismo}
+
+Toda la aleatoriedad usa generadores con semillas fijadas en \texttt{config/experimento.yaml}, y las semillas de las réplicas se derivan de ellas.
+Por lo tanto, la misma configuración produce archivos de resultados y tablas idénticos byte a byte.
+Las figuras PDF no se comparan de ese modo porque sus bytes dependen de la versión de Matplotlib, aunque los datos graficados sean los mismos.
+
+La última sección del notebook permite cambiar el plazo, el cumplimiento exigido, la demanda y el tiempo de servicio sobre una copia de la configuración.
+Esos resultados son exploratorios y no forman parte de este informe.
+
+\subsubsection*{Origen de cada tabla y figura}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Script que genera cada tabla y figura del informe.}
+  \label{tab:trazabilidad}
+  \small
+  \begin{tabular}{lll}
+    \toprule
+    Script & Comando & Tablas y figuras \\
+    \midrule
+    \texttt{01\_preparar\_datos.py} & \texttt{make datos} & Datos procesados y \texttt{resultados/datos\_resumen.csv} \\
+    \texttt{02\_pronostico.py} & \texttt{make pronostico} & Tabla~\ref{tab:errores-pronostico} y Figura~\ref{fig:pronostico-prueba} \\
+    \texttt{03\_verificacion.py} & \texttt{make verificacion} & Tablas~\ref{tab:servicio} y~\ref{tab:verificacion-mmc} \\
+    \texttt{04\_experimentos.py} & \texttt{make experimentos} & Tablas~\ref{tab:experimentos-escenarios} y~\ref{tab:experimentos-recomendacion}, Figura~\ref{fig:experimentos-desempeno} \\
+    \texttt{05\_sensibilidad.py} & \texttt{make sensibilidad} & Tabla~\ref{tab:sensibilidad-recomendacion} y Figura~\ref{fig:sensibilidad-cumplimiento} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Cada script documenta en su encabezado los archivos que escribe en \texttt{resultados/}, \texttt{informe/tablas/} e \texttt{informe/figuras/}.
+Los parámetros del estudio están todos en \texttt{config/experimento.yaml}, con un comentario que justifica cada valor.
