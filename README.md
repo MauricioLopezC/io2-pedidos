@@ -20,9 +20,23 @@ Planificación de personal para la preparación de pedidos de un supermercado on
 
 ```bash
 pip install -r requirements.txt
-nbstripout --install
+nbstripout --install   # solo para desarrollar: limpia las salidas de los notebooks al commitear
 make all
 ```
+
+`notebooks/recorrido.ipynb` (`make notebook`) vuelve a correr el pipeline y comprueba que los resultados coincidan con los versionados.
+Después recorre datos, pronóstico, verificación, experimentos y sensibilidad.
+Al final permite cambiar plazo, cumplimiento, demanda o servicio sobre una copia de la configuración, sin afectar los resultados del informe.
+
+## Entrega
+
+```bash
+git tag v1.0-entrega          # fijar la versión que se entrega
+make entrega REF=v1.0-entrega
+```
+
+`scripts/entrega.py` extrae esa versión en una carpeta temporal, compila el informe, ejecuta el notebook y verifica que los resultados regenerados sean idénticos a los versionados.
+Si coinciden, genera `entrega/io2-pedidos-<versión>.zip` con los archivos versionados más el PDF, los datos procesados y el notebook con sus salidas.
 
 ## Simular una jornada (Persona B)
 

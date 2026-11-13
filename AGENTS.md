@@ -40,22 +40,6 @@ Documentos de referencia, leerlos antes de decidir algo de fondo:
 Estado al momento de escribir esto: todos los módulos (`datos`, `pronostico`, `colas`, `simulacion`, `verificacion` y `experimentos`), los scripts `01`–`05`, los tests y las secciones del informe están implementados y verificados.
 Revisar el árbol antes de suponer que algo existe.
 
-### Punto de partida para experimentos y sensibilidad (Persona C)
-
-Insumos ya disponibles:
-
-- **Demanda:** `resultados/pronostico_semana_siguiente.csv` (de `make pronostico`), con columnas `hora`, `pronostico`, `inferior`, `superior` en pedidos/h, para cada hora de apertura de la semana posterior al histórico.
-  El intervalo es empírico, con la cobertura de `pronostico.nivel_intervalo`.
-- **Simulador:** `pedidos.simulacion.simular_jornada(perfil, dotacion, plazo_min, semilla, config)`.
-  `perfil` es la Serie de **una** jornada: índice con todas las horas de apertura en orden (también las de tasa cero) y tasas en pedidos/h.
-  Devuelve `(detalle, resumen)`: `detalle` tiene una fila por pedido; `resumen` incluye `llegados`, `preparados_al_cierre`, `pendientes_al_cierre`, `espera_media_min`, `total_medio_min`, `proporcion_a_tiempo`, `cola_media`, `utilizacion` y `sistema_medio`.
-  Con la misma semilla, dotaciones distintas reciben exactamente los mismos pedidos (números aleatorios comunes).
-  Detalle de unidades y del uso con pedidos reservados: sección "Simular una jornada" del `README.md`.
-- **Sensibilidad al servicio:** se varía `servicio.minutos_fijos` y `servicio.minutos_por_linea` en una copia del dict de config; las llegadas no cambian con la misma semilla.
-
-**Decisiones pendientes** del equipo, que van a `config/` con su justificación **antes** de mirar resultados (§5): tiempo objetivo (`plazo_min`) y proporción exigida para considerarlo cumplido, definición de los niveles de demanda baja/media/alta, dotaciones a evaluar, número de réplicas y semilla raíz, y magnitudes de la sensibilidad.
-Ninguna está fijada todavía; no completarlas con valores plausibles sin acuerdo.
-
 ## 3. Comandos
 
 ```bash
@@ -116,11 +100,7 @@ make all                          # pipeline completo + informe
 
 La cátedra admite IA como apoyo, pero **el equipo responde por fórmulas, algoritmos, referencias, código, resultados y conclusiones**, y tiene que poder explicarlos en la defensa oral. Por lo tanto, el agente:
 
-- **No inventa referencias.** Solo cita fuentes verificables (libros de la cátedra, artículos, documentación oficial) y nunca agrega a `referencias.bib` una entrada que no pueda chequearse.
 - **No inventa resultados.** Ningún número va al informe ni a `docs/` sin haber salido de ejecutar el código.
-- **Explica lo que implementa:** cuando introduce una fórmula, un supuesto o un método, deja en el docstring, en `docs/` o en el mensaje del PR qué hace, de dónde sale y por qué se eligió.
-- Prefiere soluciones simples que el equipo pueda defender por sobre técnicas sofisticadas que excedan la materia.
-- Si un dato, supuesto o decisión no está claro, lo marca como pendiente o pregunta, en vez de completarlo con algo plausible.
 
 ## 8. Flujo de trabajo con Git
 
