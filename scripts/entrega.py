@@ -61,7 +61,11 @@ def huellas_numericas(raiz: Path) -> dict[str, str]:
 def compilar_informe(raiz: Path) -> Path:
     informe = raiz / "informe"
     corrida = subprocess.run(
-        ["latexmk", "-pdf", "-interaction=nonstopmode", "main.tex"], cwd=informe, capture_output=True, text=True
+        ["latexmk", "-pdf", "-interaction=nonstopmode", "main.tex"],
+        cwd=informe,
+        capture_output=True,
+        text=True,
+        errors="replace",  # pdfTeX escribe el log en Latin-1 cuando hay acentos
     )
     pdf = informe / "main.pdf"
     if corrida.returncode != 0 or not pdf.exists():
