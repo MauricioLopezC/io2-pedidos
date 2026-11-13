@@ -53,7 +53,7 @@ Cuando las llegadas siguen un proceso de Poisson, incluso un pronóstico que con
 Ese error irreducible es un piso con el que conviene comparar los métodos para saber cuánto margen de mejora queda.
 \subsection{Teoría de colas}
 Una fila FIFO asigna el siguiente preparador libre al pedido que lleva más tiempo esperando.
-El modelo M/M/$c$ supone llegadas Poisson con tasa constante $\lambda$, servicios exponenciales independientes de tasa $\mu$ por preparador, $c$ preparadores equivalentes y espacio de espera ilimitado \cite{bertsekas_colas}.
+El modelo M/M/$c$ supone llegadas Poisson con tasa constante $\lambda$, servicios exponenciales independientes de tasa $\mu$ por preparador, $c$ preparadores equivalentes y espacio de espera ilimitado \cite{bertsekas_colas,taha_io_2004}.
 Si las tasas se expresan por hora, la carga ofrecida $a=\lambda/\mu$ mide cuántos preparadores ocuparía la demanda en promedio y $\rho=a/c$ es la fracción ocupada de la capacidad.
 Existe equilibrio estacionario cuando $\rho<1$.
 La fórmula de Erlang C da la probabilidad de que un pedido deba esperar:

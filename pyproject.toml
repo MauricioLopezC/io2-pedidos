@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "pedidos"
 version = "0.1.0"
 description = "Planificación de preparadores de pedidos online: pronóstico, colas y simulación."
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 
 [tool.setuptools.packages.find]
 where = ["src"]

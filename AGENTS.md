@@ -34,10 +34,10 @@ Documentos de referencia, leerlos antes de decidir algo de fondo:
 | `tests/` | pytest, un archivo por módulo de `src/pedidos`. |
 | `resultados/` | Salidas numéricas de los experimentos. |
 | `informe/` | Informe en LaTeX (`main.tex`, `secciones/`, `figuras/`, `tablas/`, `referencias.bib`). |
-| `notebooks/` | Exploración. Nada del informe sale solo de un notebook. |
+| `notebooks/` | `recorrido.ipynb`: reproduce el pipeline y permite explorar. Nada del informe sale solo de un notebook. |
 | `docs/` | Notas de diseño y decisiones del equipo, en Markdown. |
 
-Estado al momento de escribir esto: todos los módulos (`datos`, `pronostico`, `colas`, `simulacion`, `verificacion` y `experimentos`), los scripts `01`–`05`, los tests y las secciones del informe están implementados y verificados.
+Estado al momento de escribir esto: todos los módulos (`datos`, `pronostico`, `colas`, `simulacion`, `verificacion` y `experimentos`), los scripts `01`–`05`, los tests, el notebook `notebooks/recorrido.ipynb`, `scripts/entrega.py` y las secciones del informe, incluido el anexo de reproducción, están implementados y verificados.
 Revisar el árbol antes de suponer que algo existe.
 
 ## 3. Comandos
@@ -59,7 +59,7 @@ make all                          # pipeline completo + informe
 
 ## 4. Reglas de código
 
-- **Python ≥ 3.11**, con pandas, numpy, SimPy, Matplotlib y PyYAML. No agregar dependencias sin motivo; si se agrega una, va a `requirements.txt`.
+- **Python ≥ 3.12**, con pandas, numpy, SimPy, Matplotlib y PyYAML. No agregar dependencias sin motivo; si se agrega una, va a `requirements.txt` con la versión exacta probada.
 - **Nombres, comentarios y docstrings en español**, siguiendo el estilo de `src/pedidos/datos.py`: docstring de módulo que explica el *porqué*, type hints y funciones puras siempre que se pueda.
 - **Parámetros en `config/`, nunca en el código.** Nada de números mágicos (tasas, semillas, horarios, tiempo objetivo, dotaciones, escenarios). Cada parámetro nuevo se agrega con un comentario que lo justifica.
 - **Rutas machine-specific nunca en `config/`**: se pasan por argumento (ver `--desde-erp`).

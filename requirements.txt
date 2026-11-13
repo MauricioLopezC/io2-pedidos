@@ -1,9 +1,12 @@
-pandas
-numpy
-simpy
-matplotlib
-pyyaml
-pytest
-nbstripout
-notebook  # Jupyter: abrir notebooks/recorrido.ipynb y ejecutarlo en scripts/entrega.py
+# Versiones exactas con las que se verificó la reproducción (Python 3.14, Linux).
+# numpy 2.5 requiere Python >= 3.12. Los bytes de las figuras dependen de la
+# versión de matplotlib; los resultados numéricos, de numpy, pandas y simpy.
+pandas==3.1.1
+numpy==2.5.4
+simpy==4.1.2
+matplotlib==3.11.2
+pyyaml==6.0.3
+pytest==9.2.0
+nbstripout==0.9.1
+notebook==7.6.5  # Jupyter: abrir notebooks/recorrido.ipynb y ejecutarlo en scripts/entrega.py
 -e .
