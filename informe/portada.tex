@@ -1,3 +1,6 @@
+% Sin ancla de página en la portada: titlepage reinicia la numeración y hyperref
+% generaría dos destinos "page.1".
+\hypersetup{pageanchor=false}
 \begin{titlepage}
 \centering
 
@@ -33,3 +36,4 @@ Sgabussi Donaire, Pablo Bernardo & 45599342 \\
 {\large 2026\par}
 
 \end{titlepage}
+\hypersetup{pageanchor=true}
