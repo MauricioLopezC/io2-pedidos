@@ -1,4 +1,39 @@
 \section{Conclusiones}
+\label{sec:conclusiones}
+
+El trabajo desarrolló y verificó un flujo completo de apoyo a la decisión para el dimensionamiento del sector de preparación de pedidos online de un supermercado, integrando el pronóstico horario por media estacional de ocho semanas, la verificación analítica mediante el modelo $M/M/c$ y la simulación de eventos discretos con números aleatorios comunes en SimPy.
+Todos los objetivos planteados se alcanzaron de manera reproducible a través de una tubería automatizada cuyos parámetros, semillas y resultados quedaron registrados y contrastados sobre un período de prueba reservado.
+
 \subsection{Recomendaciones}
+\label{sec:recomendaciones}
+
+Para cumplir el objetivo operativo de preparar al menos el 90~\% de los pedidos online en un plazo máximo de 30~minutos desde su ingreso, se recomienda asignar la dotación de preparadores según el escenario diario de demanda pronosticado para el sistema modelado:
+\begin{itemize}
+  \item \textbf{Jornadas de demanda baja ($\approx 159$~pedidos/día, como los domingos):} asignar $c^* = 3$~preparadores, con lo cual se alcanza un cumplimiento estimado del 92,0~\% (90,6~\% en los días de prueba), una espera media en fila de 5,52~minutos y una utilización del 65,5~\%.
+  En fechas en que se prevea un crecimiento superior al 10~\% sobre el pronóstico base o ante campañas promocionales, se sugiere ampliar la dotación a $c = 4$~preparadores debido al reducido margen de holgura de este escenario.
+  \item \textbf{Jornadas de demanda media ($\approx 185$~pedidos/día, como los jueves):} asignar $c^* = 4$~preparadores, logrando un 97,4~\% de pedidos a tiempo (100,0~\% en los días de prueba), una espera media de 2,87~minutos y una utilización del 58,4~\%, con holgura suficiente para absorber subestimaciones del pronóstico de hasta un 10~\%.
+  \item \textbf{Jornadas de demanda alta ($\approx 300$~pedidos/día, como los sábados):} asignar $c^* = 6$~preparadores, alcanzando un cumplimiento del 97,5~\% (98,1~\% en los días de prueba), una espera media de 2,82~minutos y una utilización del 63,2~\%.
+  \item \textbf{Contingencia ante mayores tiempos de preparación:} si una medición del tiempo de armado determinara que su media supera los 10~minutos supuestos y se aproxima a 12~minutos por pedido ($\times 1{,}20$), debe adicionarse un preparador en cada escenario ($c^* = 4$, 5 y 7).
+\end{itemize}
+
 \subsection{Limitaciones}
+\label{sec:limitaciones}
+
+Las conclusiones del estudio deben interpretarse dentro de los límites de los datos y supuestos adoptados:
+\begin{itemize}
+  \item \textbf{Naturaleza sintética de los datos:} debido al bajo volumen y a la ausencia de patrón horario del histórico del ERP, las llegadas se generaron mediante un proceso de Poisson no homogéneo calibrado para un supermercado regional (unos 200~pedidos por día), por lo que los valores numéricos reflejan el comportamiento del sistema modelado y no mediciones de campo de un comercio particular.
+  \item \textbf{Supuesto sobre la duración del servicio:} al no existir en el ERP el instante de finalización del armado, el tiempo de preparación se modeló como una función lineal determinística de la cantidad de líneas ($s(\ell) = b + m\ell$), sin variabilidad adicional para pedidos de igual tamaño ni diferencias de productividad entre empleados.
+  \item \textbf{Dotación fija por jornada:} el modelo evalúa plantillas constantes durante las 13~horas de atención y no contempla el escalonamiento de turnos de entrada y salida dentro del mismo día.
+  \item \textbf{Alcance acotado al armado:} se asumió disponibilidad plena de inventario y no se modelaron quiebres de stock, sustituciones de productos, recorrido físico en góndola ni la etapa posterior de despacho a domicilio.
+\end{itemize}
+
 \subsection{Extensiones}
+\label{sec:extensiones}
+
+A partir de la infraestructura computacional desarrollada, el estudio admite cuatro extensiones directas:
+\begin{itemize}
+  \item \textbf{Registro de tiempos de preparación en el ERP:} incorporar en la tabla de pedidos web la marca temporal de fin de preparación para estimar empíricamente la distribución del tiempo de servicio según el número de líneas del pedido.
+  \item \textbf{Turnos escalonados:} reemplazar la dotación constante diaria por una capacidad variable por franja horaria $c_h$, de modo de cubrir los picos de las 11 y las 19~horas con menor tiempo ocioso en las horas de baja demanda.
+  \item \textbf{Prioridades y preparación por lotes:} evaluar disciplinas de cola con prioridad según la modalidad de entrega (retiro en sucursal o envío) y estrategias de preparación simultánea de varios pedidos.
+  \item \textbf{Integración con el tablero gerencial del ERP:} conectar el paquete \texttt{pedidos} al tablero del sistema desarrollado en Sistemas~III para actualizar semanalmente el pronóstico y sugerir la dotación de cada día de la semana entrante.
+\end{itemize}

@@ -37,7 +37,7 @@ Documentos de referencia, leerlos antes de decidir algo de fondo:
 | `notebooks/` | Exploración. Nada del informe sale solo de un notebook. |
 | `docs/` | Notas de diseño y decisiones del equipo, en Markdown. |
 
-Estado al momento de escribir esto: `datos`, `pronostico`, `colas`, `simulacion` y `verificacion` (scripts 01–03) están implementados y testeados; `experimentos` y los scripts 04–05 están vacíos.
+Estado al momento de escribir esto: todos los módulos (`datos`, `pronostico`, `colas`, `simulacion`, `verificacion` y `experimentos`), los scripts `01`–`05`, los tests y las secciones del informe están implementados y verificados.
 Revisar el árbol antes de suponer que algo existe.
 
 ### Punto de partida para experimentos y sensibilidad (Persona C)

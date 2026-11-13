@@ -59,3 +59,32 @@ verificacion:
   replicas: 64                # Medias independientes para estimar el error Monte Carlo.
   confianza: 0.99             # Cobertura nominal marginal del intervalo normal aproximado.
   semilla: 20261111           # Raíz reproducible de las semillas de réplica.
+
+# --- Experimentos y sensibilidad (Persona C) ---------------------------------
+experimentos:
+  # Plazo objetivo desde la llegada hasta el fin de preparación (en minutos).
+  # Con preparación pura de 10 min en promedio (~20 min en pedidos grandes),
+  # 30 min deja margen operativo razonable entre espera en fila y armado.
+  plazo_min: 30.0
+  # Proporción mínima de pedidos de la jornada que deben cumplir el plazo.
+  cumplimiento_min: 0.90
+  # Días representativos de la semana pronosticada (baja = domingo factor 0,75;
+  # media = jueves factor 1,00; alta = sábado factor 1,45).
+  escenarios:
+    baja: 2026-10-25
+    media: 2026-10-22
+    alta: 2026-10-24
+  # Dotaciones fijas por jornada a comparar con números aleatorios comunes.
+  dotaciones: [2, 3, 4, 5, 6, 7, 8]
+  # Réplicas independientes por escenario y semilla raíz reproducible.
+  replicas: 100
+  semilla: 20261112
+
+sensibilidad:
+  # Columnas de pronostico_semana_siguiente.csv (intervalo empírico del 80 %).
+  curvas_pronostico: [inferior, pronostico, superior]
+  # Escalado multiplicativo del pronóstico base (evalúa el sesgo de subestimación).
+  factores_demanda: [0.90, 1.00, 1.10, 1.20]
+  # Escalado de los parámetros de servicio (minutos_fijos y minutos_por_linea),
+  # equivalente a tiempos medios de preparación de 8, 10, 12 y 14 min/pedido.
+  factores_servicio: [0.80, 1.00, 1.20, 1.40]
