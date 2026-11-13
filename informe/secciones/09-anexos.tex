@@ -31,7 +31,7 @@ La ejecución completa demora del orden de dos minutos, la mayor parte en el an�
 
 \subsubsection*{Determinismo}
 
-Toda la aleatoriedad usa generadores con semillas fijadas en \texttt{config/experimento.yaml}, y las semillas de las réplicas se derivan de ellas.
+Toda la aleatoriedad usa generadores con semillas fijadas en \nolinkurl{config/experimento.yaml}, y las semillas de las réplicas se derivan de ellas.
 Por lo tanto, la misma configuración produce archivos de resultados y tablas idénticos byte a byte.
 Las figuras PDF no se comparan de ese modo porque sus bytes dependen de la versión de Matplotlib, aunque los datos graficados sean los mismos.
 
@@ -45,7 +45,7 @@ Esos resultados son exploratorios y no forman parte de este informe.
   \caption{Script que genera cada tabla y figura del informe.}
   \label{tab:trazabilidad}
   \small
-  \begin{tabular}{lll}
+  \begin{tabular}{@{}ll>{\raggedright\arraybackslash}p{0.42\textwidth}@{}}
     \toprule
     Script & Comando & Tablas y figuras \\
     \midrule
@@ -58,5 +58,6 @@ Esos resultados son exploratorios y no forman parte de este informe.
   \end{tabular}
 \end{table}
 
-Cada script documenta en su encabezado los archivos que escribe en \texttt{resultados/}, \texttt{informe/tablas/} e \texttt{informe/figuras/}.
-Los parámetros del estudio están todos en \texttt{config/experimento.yaml}, con un comentario que justifica cada valor.
+Cada script documenta en su encabezado qué archivos escribe.
+Las salidas van a las carpetas \texttt{resultados/}, \texttt{informe/tablas/} e \texttt{informe/figuras/}.
+Los parámetros del estudio están todos en \nolinkurl{config/experimento.yaml}, con un comentario que justifica cada valor.
