@@ -28,3 +28,6 @@ informe/main.pdf
 datos/procesados/*
 !datos/procesados/.gitkeep
 *.egg-info/
+
+# Comprimidos generados por scripts/entrega.py
+entrega/

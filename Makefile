@@ -1,6 +1,6 @@
 PY = python
 
-.PHONY: all datos pronostico verificacion experimentos sensibilidad informe test clean
+.PHONY: all datos pronostico verificacion experimentos sensibilidad informe notebook entrega test clean
 
 all: datos pronostico verificacion experimentos sensibilidad informe
 
@@ -21,6 +21,14 @@ sensibilidad:
 
 informe:
 	cd informe && latexmk -pdf -interaction=nonstopmode main.tex
+
+notebook:
+	jupyter notebook notebooks/recorrido.ipynb
+
+# Comprimido para la cátedra; REF=v1.0-entrega para fijar la versión (por defecto, HEAD).
+REF ?= HEAD
+entrega:
+	$(PY) scripts/entrega.py --ref $(REF)
 
 test:
 	$(PY) -m pytest -q
