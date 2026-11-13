@@ -87,3 +87,27 @@ Los supuestos del modelo se agrupan según el aspecto del sistema al que se refi
   \item Las conclusiones se refieren al sistema modelado y a sus datos sintéticos, no a una operación real medida.
 \end{itemize}
 \subsection{Diseño experimental}
+\label{sec:diseno-experimental}
+
+Los parámetros del diseño experimental se fijaron en el archivo de configuración antes de comparar alternativas de dotación.
+Se estableció como objetivo operativo un plazo máximo de $\mathrm{plazo\_min} = 30$~minutos desde el ingreso del pedido hasta la finalización de su armado, exigiendo que al menos el 90~\% de los pedidos admitidos en la jornada lo cumplan.
+Dado que el tiempo medio de preparación sin espera es de 10~minutos para un pedido de 12~líneas y alcanza unos 20~minutos en pedidos grandes, un límite de 30~minutos otorga un margen razonable para absorber fluctuaciones horarias sin demorar la disponibilidad para retiro o despacho.
+
+A partir del pronóstico de la semana posterior al histórico (del 19 al 25 de octubre de 2026) se definieron tres escenarios representativos de operación:
+\begin{itemize}
+  \item \textbf{Demanda baja (domingo 25/10):} factor semanal configurado de 0,75, con un pronóstico de 158,8~pedidos en la jornada y un pico horario de 18,9~pedidos por hora.
+  \item \textbf{Demanda media (jueves 22/10):} día de referencia con factor semanal 1,00, 185,2~pedidos pronosticados en el día y un pico de 21,9~pedidos por hora.
+  \item \textbf{Demanda alta (sábado 24/10):} día de mayor actividad con factor semanal 1,45, 300,5~pedidos pronosticados y un pico de 38,2~pedidos por hora a las 19~horas.
+\end{itemize}
+
+En cada escenario se evaluaron dotaciones fijas de $c \in \{2, 3, 4, 5, 6, 7, 8\}$ preparadores durante las 13~horas de apertura.
+Para cada combinación se ejecutaron 100~réplicas independientes derivadas de la semilla raíz 20261112.
+Dentro de cada réplica, todas las dotaciones recibieron exactamente la misma secuencia de llegadas y tamaños de pedido mediante números aleatorios comunes, de modo que las diferencias observadas entre dotaciones respondan únicamente al cambio de capacidad.
+La regla de decisión selecciona la menor dotación evaluada cuya proporción media de pedidos preparados dentro de los 30~minutos alcance el 90~\%, informando de manera explícita los casos en que ninguna dotación del rango lo logre.
+
+Con el fin de contrastar la recomendación fuera de la simulación alimentada por el pronóstico, las mismas dotaciones se evaluaron sobre las trazas observadas de los domingos, jueves y sábados de las cuatro semanas del período de prueba reservado (del 21 de septiembre al 18 de octubre de 2026).
+Finalmente, se diseñó un análisis de sensibilidad sobre dos ejes manteniendo las mismas semillas de réplica:
+\begin{enumerate}
+  \item \textbf{Sensibilidad al error de pronóstico y nivel de demanda:} se reemplazó el perfil horario base por las bandas inferior (percentil~10) y superior (percentil~90) del intervalo empírico del 80~\% y se aplicaron factores multiplicativos de 0,90, 1,00, 1,10 y 1,20 sobre la demanda pronosticada, contemplando en particular el sesgo de subestimación del método estacional.
+  \item \textbf{Sensibilidad a la duración del servicio:} se escalaron simultáneamente los parámetros $b$ y $m$ por factores de 0,80, 1,00, 1,20 y 1,40, equivalentes a tiempos medios de preparación de 8, 10, 12 y 14~minutos por pedido.
+\end{enumerate}

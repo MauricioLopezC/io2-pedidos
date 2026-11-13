@@ -39,5 +39,76 @@ Con el método elegido se pronosticó la semana posterior al histórico, del 19 
 El pronóstico va de 159 pedidos el domingo a 185 el jueves y 300 el sábado, con un máximo de 38 pedidos por hora el sábado a las 19.
 Los residuos del período de prueba ubican el 80~\% de los valores reales entre 4,4 pedidos por hora por debajo y 6,6 por encima del pronóstico; la asimetría refleja la subestimación señalada.
 Este perfil horario y su intervalo son la entrada de los escenarios de demanda simulados.
+
 \subsection{Escenarios}
+\label{sec:resultados-escenarios}
+
+La Tabla~\ref{tab:experimentos-escenarios} presenta las medidas de desempeño promedio obtenidas en las 100~réplicas de cada escenario para las dotaciones de 2 a 8~preparadores, y la Figura~\ref{fig:experimentos-desempeno} muestra la evolución del cumplimiento del plazo de 30~minutos, la espera media en fila y la utilización del personal.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Desempeño medio en 100~réplicas por escenario y dotación ($c^*$ indica la menor dotación que alcanza al menos el 90~\% de pedidos listos en 30~minutos).}
+  \label{tab:experimentos-escenarios}
+  \input{tablas/experimentos_escenarios}
+\end{table}
+
+En el escenario de demanda baja (domingo, 158,8~pedidos pronosticados), asignar $c = 2$~preparadores resulta insuficiente: aunque la capacidad media nominal de dos empleados durante 13~horas (156~pedidos a razón de 10~minutos por pedido) es cercana al total diario, la concentración de arribos en los picos de las 11 y las 19~horas acumula una fila media de 7,37~pedidos, eleva la espera media a 40,67~minutos, deja 18,6~pedidos pendientes al cierre y reduce el cumplimiento a 37,5~\%.
+Al incorporar un tercer preparador ($c^* = 3$), la espera media desciende a 5,52~minutos, el tiempo total a 15,50~minutos y el cumplimiento sube a 92,0~\%, con una utilización del 65,5~\% y 5,3~pedidos pendientes a las 21~horas (2,7~en fila y 2,6~en preparación).
+Dotaciones de $c \ge 4$ llevan el cumplimiento por encima del 99,4~\%, pero reducen la utilización por debajo del 50~\%.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{experimentos_desempeno}
+  \caption{Porcentaje de pedidos a tiempo ($\le 30$~min), espera media en cola y utilización del personal según la dotación en los tres escenarios.}
+  \label{fig:experimentos-desempeno}
+\end{figure}
+
+En el escenario de demanda media (jueves, 185,2~pedidos pronosticados), tres preparadores trabajan con una utilización del 74,2~\%, pero el arrastre de los picos horarios lleva la espera media a 13,48~minutos y el cumplimiento a 74,0~\%, por debajo de la meta del 90~\%.
+La menor dotación que cumple el objetivo es $c^* = 4$, con la cual el 97,4~\% de los pedidos termina dentro de los 30~minutos, la espera media baja a 2,87~minutos, el tiempo total es de 12,87~minutos y la utilización se sitúa en 58,4~\%.
+
+En el escenario de demanda alta (sábado, 300,5~pedidos pronosticados y pico de 38,2~pedidos por hora), las dotaciones de $c = 2$ y $c = 3$ operan saturadas durante casi toda la jornada ($\rho > 95$~\%), dejando 148,5 y 78,7~pedidos sin terminar al horario de cierre.
+Con $c = 4$ se cumple apenas el 50,8~\% del plazo, y con $c = 5$ se alcanza el 84,0~\% ($W_q = 8{,}60$~minutos y 15,3~pendientes al cierre), todavía insuficiente frente al umbral exigido.
+Se requieren $c^* = 6$~preparadores para alcanzar un cumplimiento del 97,5~\%, con una espera media de 2,82~minutos, un tiempo total de 12,82~minutos, una utilización del 63,2~\% y 6,4~pedidos pendientes al cierre.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Dotación recomendada por escenario según la simulación del pronóstico y su contraste sobre los pedidos observados en las cuatro semanas de prueba.}
+  \label{tab:experimentos-recomendacion}
+  \input{tablas/experimentos_recomendacion}
+\end{table}
+
+La Tabla~\ref{tab:experimentos-recomendacion} contrasta las dotaciones recomendadas ($c^* = 3$, 4 y 6) aplicándolas directamente sobre los pedidos registrados en el histórico sintético para los cuatro domingos, cuatro jueves y cuatro sábados del período de prueba reservado.
+En los tres escenarios la dotación recomendada sostuvo el nivel de servicio exigido sobre los datos reservados: 90,6~\% de pedidos a tiempo en los domingos de prueba (donde llegaron en promedio 163,5~pedidos frente a los 158,8~pronosticados), 100,0~\% en los jueves (182,8~pedidos medios) y 98,1~\% en los sábados (301,8~pedidos medios).
+En cambio, asignar un preparador menos ($c^* - 1$) en esos mismos días de prueba redujo el cumplimiento a 28,9~\% en demanda baja ($c=2$), 82,8~\% en demanda media ($c=3$) y 82,0~\% en demanda alta ($c=5$), confirmando que la recomendación coincide con el mínimo efectivo observado en la muestra de prueba.
+
 \subsection{Sensibilidad}
+\label{sec:resultados-sensibilidad}
+
+La Tabla~\ref{tab:sensibilidad-recomendacion} resume cómo varía la dotación recomendada $c^*$ y qué nivel de cumplimiento conserva la dotación base ($c^*_{\mathrm{base}} = 3$, 4 y 6 para demanda baja, media y alta) cuando se perturban el perfil de demanda y la duración del servicio.
+La Figura~\ref{fig:sensibilidad-cumplimiento} muestra las curvas completas de cumplimiento por dotación bajo ambas familias de perturbaciones.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Sensibilidad de la dotación recomendada $c^*$ y del cumplimiento de la dotación base ($c^*_{\mathrm{base}} = 3$, 4, 6) ante variaciones de la demanda pronosticada y de los tiempos de preparación.}
+  \label{tab:sensibilidad-recomendacion}
+  \input{tablas/sensibilidad_recomendacion}
+\end{table}
+
+Respecto de los errores de pronóstico y cambios en el volumen de arribos, la sensibilidad revela una asimetría marcada entre las demandas medias o altas y la jornada de demanda baja.
+Cuando la demanda se incrementa un 10~\% sobre el pronóstico ($\times 1{,}10$, superando el sesgo medio de subestimación del 4,4~\% detectado en el período de prueba), las dotaciones recomendadas en demanda media ($c^* = 4$) y demanda alta ($c^* = 6$) absorben el aumento sin requerir personal adicional, sosteniendo un cumplimiento de 94,3~\% ($W_q = 4{,}37$~minutos) y 93,2~\% ($W_q = 4{,}91$~minutos), respectivamente.
+Por el contrario, en demanda baja la dotación base $c^* = 3$ contaba con una holgura menor (92,0~\% en el caso nominal) y ante un aumento del 10~\% su cumplimiento desciende a 85,3~\% ($W_q = 8{,}62$~minutos), por lo que requiere sumar un cuarto preparador ($c^* = 4$, con 99,3~\% a tiempo).
+Ante un aumento del 20~\% en las llegadas ($\times 1{,}20$) o bajo la banda superior del intervalo empírico del 80~\% (percentil~90, que agrega 6,6~pedidos por hora en cada franja y lleva los totales diarios a 244,9, 271,4 y 386,6~pedidos), los tres escenarios necesitan exactamente un preparador adicional respecto del caso base ($c^* = 4$, 5 y 7).
+De mantenerse la dotación base frente a la banda superior P90, el cumplimiento caería a 36,3~\% en demanda baja ($W_q = 40{,}82$~minutos), 76,3~\% en demanda media ($W_q = 12{,}10$~minutos) y 85,3~\% en demanda alta ($W_q = 8{,}02$~minutos).
+En sentido inverso, una demanda en la banda inferior (percentil~10) o un 10~\% menor permite reducir en un preparador la dotación de demanda alta ($c^* = 5$), mientras que en demanda baja no es posible bajar de tres empleados sin perforar el umbral del 90~\%.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{sensibilidad_cumplimiento}
+  \caption{Sensibilidad del porcentaje de pedidos preparados en $\le 30$~minutos frente a variaciones del perfil de demanda (arriba) y de la duración del servicio (abajo).}
+  \label{fig:sensibilidad-cumplimiento}
+\end{figure}
+
+El análisis sobre los tiempos de preparación muestra que el dimensionamiento es altamente sensible al supuesto de duración unitaria $s(\ell) = b + m\ell$.
+Una mejora del 20~\% en la velocidad de armado ($\times 0{,}80$, equivalente a reducir la media de 10 a 8~minutos por pedido con $b = 3{,}2$ y $m = 0{,}4$~minutos) permite operar con un preparador menos en demanda media ($c^* = 3$, 95,9~\%) y alta ($c^* = 5$, 99,1~\%).
+En cambio, si el tiempo de preparación resulta un 20~\% mayor al supuesto ($\times 1{,}20$, media de 12~minutos por pedido con $b = 4{,}8$ y $m = 0{,}6$~minutos), la dotación base deja de cumplir la meta en los tres escenarios (70,9~\%, 84,2~\% y 81,9~\% a tiempo, con esperas medias de 13,70, 7,82 y 8,36~minutos) y se vuelve necesario incorporar un empleado adicional en cada nivel ($c^* = 4$, 5 y 7).
+Finalmente, ante un incremento del 40~\% en la duración del servicio ($\times 1{,}40$, media de 14~minutos por pedido), el cumplimiento de la dotación base se desploma a 43,8~\%, 62,2~\% y 57,0~\%, exigiendo dos preparadores adicionales en todos los escenarios ($c^* = 5$, 6 y 8) para restituir el objetivo del 90~\%.
